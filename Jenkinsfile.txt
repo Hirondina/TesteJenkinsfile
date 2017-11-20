@@ -1,0 +1,54 @@
+pipeline { 
+  agent any 
+  stages {
+    stage ('Checkout Code') {
+      steps {
+        checkout scm
+      }
+    }
+    stage ('Verify Tools'){
+      steps {
+        parallel (
+          node: { echo "npm -v" },
+          docker: { echo "docker -v" }
+        )
+      }
+    }
+    stage ('Build app') {
+      steps {
+        echo "npm prune"
+        echo "npm install"
+      }
+    }
+    stage ('Test'){
+      steps {
+        echo "npm test"
+      }
+    }
+ 
+    stage ('Build container') {
+      steps {
+        echo "docker build -t badamsbb/node-example:latest ."
+        echo "docker tag badamsbb/node-example:latest badamsbb/node-example:v${env.BUILD_ID}"
+      }
+    }
+    stage ('Deploy') {
+      steps {
+        input "Ready to deploy?"
+        echo "docker stack rm node-example"
+        echo "docker stack deploy node-example --compose-file docker-compose.yml"
+        echo "docker service update node-example_server --image badamsbb/node-example:v${env.BUILD_ID}"
+      }
+    }
+    stage ('Verify') {
+      steps {
+        input "Everything good?"
+      }
+    }
+    stage ('Clean') {
+      steps {
+        echo "npm prune"
+        echo "rm -rf node_modules"
+     }
+  }
+}
