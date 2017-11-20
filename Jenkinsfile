@@ -13,7 +13,8 @@ pipeline {
     }
     stage('Build app') {
       steps {
-        bat ' echo "npm prune"         echo "npm install"'
+        bat ' echo "npm prune"         
+        echo "npm install"'
       }
     }
     stage('Test') {
@@ -33,7 +34,8 @@ pipeline {
     }
     stage('Clean') {
       steps {
-        bat 'echo "npm prune"         echo "rm -rf node_modules"'
+        bat 'echo "npm prune"         
+        echo "rm -rf node_modules"'
       }
     }
   }
