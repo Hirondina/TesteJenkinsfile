@@ -28,7 +28,7 @@ pipeline {
     }
     stage('Verify') {
       steps {
-        bat 'input "Everything good?"'
+        bat 'echo "Everything good?"'
       }
     }
     stage('Clean') {
