@@ -23,7 +23,7 @@ pipeline {
     }
     stage('Deploy') {
       steps {
-        bat '  input "Ready to deploy?"'
+        bat 'echo "docker stack rm node-example"'
       }
     }
     stage('Verify') {
